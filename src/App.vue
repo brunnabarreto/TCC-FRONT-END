@@ -1,11 +1,15 @@
-<script setup></script>
-
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <router-view></router-view> <!-- Aqui o Vue Router vai mostrar a tela correta -->
 </template>
 
-<style scoped></style>
+<script setup>
+</script>
+
+<style scoped>
+/* Estilos opcionais do App.vue */
+#app {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin-top: 50px;
+}
+</style>
