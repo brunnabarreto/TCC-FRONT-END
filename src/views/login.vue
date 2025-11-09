@@ -1,5 +1,5 @@
 <template>
-  <div class="perfil">
+  <div class="login">
     <h1>Perfil do Usuário</h1>
     <p>Essa é a tela do perfil.</p>
     <router-link to="/">Voltar para Home</router-link>
@@ -12,6 +12,6 @@ export default {}
 
 <style scoped>
 .perfil { text-align: center; margin-top: 50px; }
-h1 { color: #355c7d; }
+h1 { color: #ff8210; }
 p { font-size: 18px; }
 </style>

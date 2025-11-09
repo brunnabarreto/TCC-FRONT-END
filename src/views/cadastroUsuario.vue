@@ -14,6 +14,6 @@ export default {}
 
 <style scoped>
 .cadastro { text-align: center; margin-top: 50px; }
-h1 { color: #6c5b7b; }
+h1 { color: #ff8210;}
 input { display: block; margin: 10px auto; padding: 8px; }
 </style>
