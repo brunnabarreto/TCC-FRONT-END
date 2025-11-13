@@ -1,21 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 // Importando suas telas
-import Home from '../views/Home.vue'
-import CadastroUsuario from '../views/CadastroUsuario.vue'
-import login from '../views/login.vue'
-import CadastroProdutos from '../views/CadastroProdutos.vue'
 import Login from '../views/login.vue'
-import financeiro from '../views/financeiro.vue'
+import CadastroUsuario from '../views/CadastroUsuario.vue'
+import CadastroProdutos from '../views/CadastroProdutos.vue'
+
+
 
 // Definindo as rotas
 
 const routes = [
-  { path: '/', component: Home },
+  { path: '/', component: Login },
   { path: '/cadastro', component: CadastroUsuario },
-  { path: '/login', component: Login },
   { path: '/cadastro-produtos', component: CadastroProdutos }, // <-- CORRIGIDO
-  { path: '/financeiro', component: financeiro }
+
 
 ]
 
