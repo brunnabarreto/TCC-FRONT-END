@@ -19,36 +19,27 @@
           Ainda não tem cadastro? Clique aqui
         </router-link>
 
-    
+
     </div>
     <p class="version">ResTapp - versão 0.11</p>
   </div>
 </template>
 
 <script setup>
-// Importa 'ref' do Vue para criar variáveis reativas
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import logoUrl from '@/assets//logo.png'; 
 
-// Importa a imagem do logo.
-// 1. Crie uma pasta 'src/assets/' no seu projeto Vue.
-// 2. Coloque o seu arquivo 'logo (1).png' dentro dela.
-// 3. Este caminho ('../assets/...') assume que 'Login.vue' está em 'src/components/'.
-//    Ajuste o caminho se necessário.
-import logoUrl from '@/assets/logo.png'; 
 
-// 'ref' é usado para criar variáveis reativas que o Vue pode monitorar.
 const email = ref('');
 const senha = ref('');
-
-// Esta é a função que será chamada quando o formulário for enviado
+const router = useRouter();
 const handleLogin = () => {
-  // Por enquanto, apenas exibimos os valores no console e um alerta.
-  // Aqui você colocaria sua lógica real de login (ex: chamada de API).
   console.log('Tentativa de login com:');
   console.log('Email:', email.value);
   console.log('Senha:', senha.value);
-  
-  alert(`Login com: ${email.value}`);
+ 
+  router.push({ name: 'TelaMesa' });
 };
 </script>
 
@@ -60,7 +51,6 @@ const handleLogin = () => {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Fundo laranja e centralização vêm do seu 'body' original */
 body {
   background: linear-gradient(90deg, #ff7b00, #ff8c1a);
   height: 100vh;
@@ -71,7 +61,6 @@ body {
 </style>
 
 <style scoped>
-/* Container principal */
 .login-container {
   display: flex;
   flex-direction: column;
@@ -79,7 +68,6 @@ body {
   width: 100%;
 }
 
-/* Caixa branca de login */
 .login-box {
   background-color: #fff;
   width: 430px;
@@ -89,19 +77,17 @@ body {
   text-align: center;
 }
 
-/* Logo circular */
 .logo img {
   width: 250px;
   height: 180px;
- 
+
 }
 
-/* Inputs */
 form {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  
+
 }
 
 label {
@@ -125,7 +111,6 @@ input:focus {
   border-color: #ff7b00;
 }
 
-/* Link 'esqueci minha senha' */
 .esquec-senha {
   text-align: right;
   font-size: 13px;
@@ -135,34 +120,34 @@ input:focus {
 
 .esquec-senha:hover {
   text-decoration: underline;
+}
   .novo-cadastro {
   text-align: center;
   font-size: 13px;
   color: #757575;
   text-decoration: none;
-  margin-top: 8px; /* Dá um espacinho entre ele e o link de cima */
+  margin-top: 8px; 
   transition: color 0.2s;
 }
 
 .cadastroUsuario:hover {
   text-decoration: underline;
-  color: #ff7b00; /* Cor do tema */
+  color: #ff7b00; 
 }
-}
+
 .cadastroUsuario {
   text-align: center;
   font-size: 13px;
   color: #757575;
   text-decoration: none;
-  margin-top: 8px; /* Dá um espacinho entre ele e o link de cima */
+  margin-top: 8px; 
   transition: color 0.2s;
 }
 
 .cadastroUsuario:hover {
   text-decoration: underline;
-  color: #ff7b00; /* Cor do tema */
+  color: #ff7b00; 
 }
-/* Botão de login */
 .button-login {
   background-color: #ff7b00;
   color: white;
@@ -178,7 +163,6 @@ input:focus {
   background-color: #e96b00;
 }
 
-/* Texto de versão */
 .version {
   color: #fff;
   font-size: 12px;

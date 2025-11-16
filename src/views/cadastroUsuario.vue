@@ -35,7 +35,7 @@
       <button type="submit">Cadastrar</button>
     </form>
         <router-link to="/" class="voltar-login">
-            Já tem uma conta? Voltar para o login
+          Já tem uma conta? Voltar para o login
         </router-link>
     </div>
   </div>
@@ -43,46 +43,49 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
-// Variáveis reativas para cada campo do formulário
 const nome = ref('');
 const email = ref('');
 const usuario = ref('');
 const senha = ref('');
-const cargo = ref(''); // O valor default é '', que mostra o placeholder "Selecione..."
+const confirmarSenha = ref(''); 
+const cargo = ref(''); 
+ 
+const router = useRouter();
 
 const handleCadastro = () => {
-  // Verifica se o cargo foi selecionado
   if (!cargo.value) {
     alert('Por favor, selecione um cargo.');
     return;
   }
 
-  // Aqui você tem todos os dados prontos para enviar para uma API
+  if (senha.value !== confirmarSenha.value) {
+    alert('As senhas não coincidem.');
+    return;
+  }
+
   console.log('Novo cadastro:');
   console.log('Nome:', nome.value);
   console.log('Email:', email.value);
   console.log('Usuário:', usuario.value);
-  console.log('Senha:', senha.value);
-  console.log('Cargo:', cargo.value); // Será 'administrador' ou 'garcom'
+  console.log('Senha:', senha.value); 
+  console.log('Cargo:', cargo.value);
 
   alert(`Usuário ${nome.value} (${cargo.value}) cadastrado!`);
-  //_Depois de cadastrar, você pode querer navegar o usuário de volta para o login:_
-  // router.push('/'); 
+  router.push({ name: 'TelaMesa' }); 
 };
 </script>
 
 <style scoped>
-/* Container principal (para centralizar como o login) */
 .cadastro-container {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding: 40px 0; /* Adiciona espaço caso o form cresça */
+  padding: 40px 0; 
 }
 
-/* Caixa branca */
 .cadastro-box {
   background-color: #fff;
   width: 430px;
@@ -97,7 +100,6 @@ h2 {
   color: #333;
 }
 
-/* Formulário */
 form {
   display: flex;
   flex-direction: column;
@@ -110,19 +112,15 @@ input, select {
   padding: 10px;
   box-sizing: border-box; 
   
-  /* A MUDANÇA ESTÁ AQUI: */
-  background-color: #fff;     /* Fundo branco */
-  border: 1px solid #ddd;    /* Borda cinza clara, igual ao login */
-  border-radius: 6px;        /* Bordas arredondadas, igual ao login */
+  background-color: #fff;   
+  border: 1px solid #ddd;   
+  border-radius: 6px;       
   
   font-size: 14px;
-  outline: none; /* Remove a borda azul padrão do navegador ao clicar */
+  outline: none; 
   transition: border 0.2s;
 }
 
-/* Isto faz a borda ficar laranja quando o campo é selecionado,
-  exatamente como na tela de login.
-*/
 input:focus, select:focus {
   border-color: #ff7b00;
 }
@@ -142,13 +140,13 @@ button {
   cursor: pointer;
   font-size: 16px;
   transition: background 0.3s;
-  margin-top: 10px; /* Adiciona um espaço acima do botão */
+  margin-top: 10px; 
 }
 
 button:hover {
   background-color: #e96b00;
 } 
-/* Opcional: Estilo para a opção placeholder */
+
 select option[value=""] {
   color: #999;
 }
@@ -158,7 +156,6 @@ input:focus, select:focus {
   border-color: #ff7b00;
 }
 
-/* Botão de cadastro */
 .button-cadastro {
   background-color: #ff7b00;
   color: white;
@@ -175,10 +172,8 @@ input:focus, select:focus {
   background-color: #e96b00;
 }
 
-/* COLE ESTE BLOCO TAMBÉM DENTRO DO <style scoped>
-*/
-/* Link para voltar ao login */
 .voltar-login {
+  display: block; 
   text-align: center;
   font-size: 13px;
   color: #757575;
