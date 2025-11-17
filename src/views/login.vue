@@ -5,15 +5,21 @@
         <img :src="logoUrl" alt="RestApp Logo">
       </div>
       <form @submit.prevent="handleLogin">
+        <div v-if="erro" class="mensagem-erro">
+          {{ erro }}
+        </div>
+
         <label for="email">Email:</label>
-        <input type="email" id="email" placeholder="Digite seu email" v-model="email">
+        <input type="email" id="email" placeholder="Digite seu email" v-model="email" :disabled="carregando">
 
         <label for="senha">Senha:</label>
-        <input type="password" id="senha" placeholder="Digite sua senha" v-model="senha">
+        <input type="password" id="senha" placeholder="Digite sua senha" v-model="senha" :disabled="carregando">
 
         <a href="#" class="esquec-senha">Esqueci minha senha</a>
 
-        <button type="submit" class="button-login">Login</button>
+        <button type="submit" class="button-login" :disabled="carregando">
+          {{ carregando ? 'Carregando...' : 'Login' }}
+        </button>
       </form>
       <router-link to="/cadastro" class="cadastroUsuario">
           Ainda não tem cadastro? Clique aqui
@@ -28,18 +34,36 @@
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import logoUrl from '@/assets//logo.png'; 
-
+import { useAuth } from '@/hooks/useAuth';
+import logoUrl from '@/assets//logo.png';
 
 const email = ref('');
 const senha = ref('');
+const erro = ref('');
+const carregando = ref(false);
 const router = useRouter();
-const handleLogin = () => {
-  console.log('Tentativa de login com:');
-  console.log('Email:', email.value);
-  console.log('Senha:', senha.value);
- 
-  router.push({ name: 'TelaMesa' });
+const { login } = useAuth();
+
+const handleLogin = async () => {
+  if (!email.value || !senha.value) {
+    erro.value = 'Email e senha são obrigatórios';
+    return;
+  }
+
+  erro.value = '';
+  carregando.value = true;
+
+  try {
+    const resultado = await login(email.value, senha.value);
+    if (resultado.success) {
+      router.push({ name: 'TelaMesa' });
+    }
+  } catch (error) {
+    erro.value = error.response?.data?.message || 'Falha ao fazer login. Verifique suas credenciais.';
+    console.error('Erro no login:', error);
+  } finally {
+    carregando.value = false;
+  }
 };
 </script>
 
@@ -91,7 +115,7 @@ form {
 }
 
 label {
-  text-align: left; 
+  text-align: left;
   font-size: 14px;
   color: #555;
 
@@ -126,13 +150,13 @@ input:focus {
   font-size: 13px;
   color: #757575;
   text-decoration: none;
-  margin-top: 8px; 
+  margin-top: 8px;
   transition: color 0.2s;
 }
 
 .cadastroUsuario:hover {
   text-decoration: underline;
-  color: #ff7b00; 
+  color: #ff7b00;
 }
 
 .cadastroUsuario {
@@ -140,13 +164,13 @@ input:focus {
   font-size: 13px;
   color: #757575;
   text-decoration: none;
-  margin-top: 8px; 
+  margin-top: 8px;
   transition: color 0.2s;
 }
 
 .cadastroUsuario:hover {
   text-decoration: underline;
-  color: #ff7b00; 
+  color: #ff7b00;
 }
 .button-login {
   background-color: #ff7b00;

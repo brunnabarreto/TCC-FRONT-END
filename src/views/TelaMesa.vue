@@ -1,6 +1,6 @@
 <template>
   <div class="main-container">
-    
+
     <div class="menu">
       <div class="menu-item">PRINCIPAL</div>
       <div class="menu-item">PRODUTOS</div>
@@ -8,7 +8,7 @@
       <div class="menu-item">FINANCEIRO</div>
       <div class="menu-item">RELATÓRIOS</div>
       <div class="menu-item">CONFIGURAÇÕES</div>
-      
+
       <div class="pesquisa" style="width:200px;">
         <img :src="imgBuscar" alt="iconebusca">
         <input type="text" placeholder="Pesquisar">
@@ -28,8 +28,8 @@
 
     <div class="actions">
       <div class="buscar-num">
-        <input 
-          type="text" 
+        <input
+          type="text"
           placeholder="Buscar número ou nome..."
           v-model="searchQuery"
         >
@@ -41,9 +41,9 @@
     </div>
 
     <div class="grade-mesas">
-      <div 
-        v-for="table in filteredTables" 
-        :key="table.id" 
+      <div
+        v-for="table in filteredTables"
+        :key="table.id"
         class="mesa"
       >
         {{ table.status }}
@@ -56,7 +56,7 @@
       <div>Registrado para: Restaurante Encantos da Maré</div>
       <div>ResTapp versão 0.11</div>
     </footer>
-    
+
   </div>
 </template>
 
@@ -91,7 +91,7 @@ const filteredTables = computed(() => {
   if (!searchQuery.value) {
     return allTables.value;
   }
-  
+
   const query = searchQuery.value.toLowerCase();
   return allTables.value.filter(table => {
     return table.number.includes(query);
@@ -216,7 +216,7 @@ const filteredTables = computed(() => {
   font-size: 14px;
   outline: none;
 }
-  
+
 .button {
   background: #ffffff;
   padding: 8px 20px;
@@ -236,6 +236,7 @@ const filteredTables = computed(() => {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: 12px;
+  
 }
 
 .mesa {
