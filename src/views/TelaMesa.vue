@@ -103,9 +103,16 @@ const filteredTables = computed(() => {
 <style scoped>
 .main-container {
   margin: 0;
+  padding: 0;
   font-family: Arial, Helvetica, sans-serif;
   background: linear-gradient(to bottom, #ffffff 10%, #ff8c00 40%, #ff7a00 100%);
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
+  overflow-y: auto;
 }
 
 .menu {
@@ -117,6 +124,9 @@ const filteredTables = computed(() => {
   font-size: 14px;
   font-weight: bold;
   color: #8f8e8e;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .menu-item {
@@ -124,6 +134,7 @@ const filteredTables = computed(() => {
   border-radius: 15px;
   cursor: pointer;
   background-color: #F5F5F5;
+  white-space: nowrap;
 }
 
 .menu-item:hover {
@@ -136,6 +147,10 @@ const filteredTables = computed(() => {
   gap: 30px;
   padding: 20px;
   align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
 }
 
 .icon-box {
@@ -147,7 +162,9 @@ const filteredTables = computed(() => {
   padding: 8px;
   text-align: center;
   cursor: pointer;
+  flex-shrink: 0;
 }
+
 .icon-box:hover {
   background-color: #eeeeee;
 }
@@ -157,9 +174,10 @@ const filteredTables = computed(() => {
   height: 60px;
 }
 
-.logo img{
+.logo img {
   height: 160px;
   width: 230px;
+  flex-shrink: 0;
 }
 
 .icon-label {
@@ -173,6 +191,9 @@ const filteredTables = computed(() => {
   align-items: center;
   gap: 20px;
   padding: 10px 20px;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .pesquisa {
@@ -181,9 +202,11 @@ const filteredTables = computed(() => {
   background: #ffffff;
   padding: 8px;
   border-radius: 30px;
-  width: 300px;
+  width: 200px;
   background-color: #BCBCBC;
+  flex-shrink: 0;
 }
+
 .pesquisa input {
   border: none;
   flex: 1;
@@ -193,6 +216,7 @@ const filteredTables = computed(() => {
   background-color: #BCBCBC;
   color: #e6e6e6;
 }
+
 .pesquisa img {
   width: 16px;
   height: 16px;
@@ -207,6 +231,7 @@ const filteredTables = computed(() => {
   padding: 8px;
   border-radius: 30px;
   width: 300px;
+  min-width: 200px;
 }
 
 .buscar-num input {
@@ -225,6 +250,8 @@ const filteredTables = computed(() => {
   border: 1px solid #cfcfcf;
   font-size: 13px;
   transition: 0.2s;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .button:hover {
@@ -234,9 +261,12 @@ const filteredTables = computed(() => {
 .grade-mesas {
   padding: 20px;
   display: grid;
-  grid-template-columns: repeat(12, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 12px;
-  
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .mesa {
@@ -249,6 +279,7 @@ const filteredTables = computed(() => {
   cursor: pointer;
   transition: 0.2s;
   box-sizing: border-box;
+  min-width: 80px;
 }
 
 .mesa:hover {
@@ -268,5 +299,91 @@ footer {
   color: #ffffff;
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 1200px) {
+  .icon-bar {
+    gap: 15px;
+  }
+
+  .icon-box {
+    width: 80px;
+    height: 70px;
+  }
+
+  .icon-box img {
+    width: 50px;
+    height: 50px;
+  }
+
+  .logo img {
+    height: 120px;
+    width: 170px;
+  }
+}
+
+@media (max-width: 768px) {
+  .menu {
+    gap: 10px;
+  }
+
+  .menu-item {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  .icon-bar {
+    gap: 10px;
+  }
+
+  .icon-box {
+    width: 70px;
+    height: 60px;
+    padding: 4px;
+  }
+
+  .icon-box img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .icon-label {
+    font-size: 10px;
+  }
+
+  .logo img {
+    height: 100px;
+    width: 140px;
+  }
+
+  .actions {
+    gap: 10px;
+    padding: 8px 10px;
+  }
+
+  .buscar-num {
+    width: 150px;
+  }
+
+  .button {
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+
+  .grade-mesas {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .mesa {
+    height: 70px;
+    font-size: 12px;
+  }
 }
 </style>
