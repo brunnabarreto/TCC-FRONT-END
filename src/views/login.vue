@@ -1,9 +1,11 @@
-<template>
+ <template>
   <div class="login-container">
+
     <div class="login-box">
       <div class="logo">
         <img :src="logoUrl" alt="RestApp Logo">
       </div>
+
       <form @submit.prevent="handleLogin">
         <label for="email">Email:</label>
         <input type="email" id="email" placeholder="Digite seu email" v-model="email">
@@ -15,20 +17,21 @@
 
         <button type="submit" class="button-login">Login</button>
       </form>
-      <router-link to="/cadastro" class="cadastroUsuario">
+
+      <router-link to="/cadastro-usuario" class="cadastroUsuario">
           Ainda não tem cadastro? Clique aqui
-        </router-link>
-
-
+      </router-link>
     </div>
+
     <p class="version">ResTapp - versão 0.11</p>
+
   </div>
-</template>
+  </template>
 
 <script setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import logoUrl from '@/assets//logo.png'; 
+import logoUrl from '@/assets//logo.png';
 
 
 const email = ref('');
@@ -38,7 +41,7 @@ const handleLogin = () => {
   console.log('Tentativa de login com:');
   console.log('Email:', email.value);
   console.log('Senha:', senha.value);
- 
+
   router.push({ name: 'TelaMesa' });
 };
 </script>
@@ -91,7 +94,7 @@ form {
 }
 
 label {
-  text-align: left; 
+  text-align: left;
   font-size: 14px;
   color: #555;
 
@@ -126,13 +129,13 @@ input:focus {
   font-size: 13px;
   color: #757575;
   text-decoration: none;
-  margin-top: 8px; 
+  margin-top: 8px;
   transition: color 0.2s;
 }
 
 .cadastroUsuario:hover {
   text-decoration: underline;
-  color: #ff7b00; 
+  color: #ff7b00;
 }
 
 .cadastroUsuario {
@@ -140,13 +143,13 @@ input:focus {
   font-size: 13px;
   color: #757575;
   text-decoration: none;
-  margin-top: 8px; 
+  margin-top: 8px;
   transition: color 0.2s;
 }
 
 .cadastroUsuario:hover {
   text-decoration: underline;
-  color: #ff7b00; 
+  color: #ff7b00;
 }
 .button-login {
   background-color: #ff7b00;
@@ -156,7 +159,7 @@ input:focus {
   border-radius: 6px;
   cursor: pointer;
   font-size: 16px;
-  transition: background 0.3s;
+  transition: backgrounD 0.3s;
 }
 
 .button-login:hover {

@@ -1,35 +1,86 @@
 <template>
   <div class="main-container">
-    
+
     <div class="menu">
-      <div class="menu-item">PRINCIPAL</div>
-      <div class="menu-item">PRODUTOS</div>
-      <div class="menu-item">BENEFÍCIOS</div>
-      <div class="menu-item">FINANCEIRO</div>
-      <div class="menu-item">RELATÓRIOS</div>
-      <div class="menu-item">CONFIGURAÇÕES</div>
-      
-      <div class="pesquisa" style="width:200px;">
+      <router-link to="/" class="menu-item" active-class="active">
+        PRINCIPAL
+      </router-link>
+
+      <router-link to="/produtos" class="menu-item" active-class="active">
+        PRODUTOS
+      </router-link>
+
+      <router-link to="/beneficios" class="menu-item" active-class="active">
+        BENEFÍCIOS
+      </router-link>
+
+      <router-link to="/financeiro" class="menu-item" active-class="active">
+        FINANCEIRO
+      </router-link>
+
+      <router-link to="/relatorios" class="menu-item" active-class="active">
+        RELATÓRIOS
+      </router-link>
+
+      <router-link to="/configuracoes" class="menu-item" active-class="active">
+        CONFIGURAÇÕES
+      </router-link>
+
+      <div class="pesquisa" style="width:250px;">
         <img :src="imgBuscar" alt="iconebusca">
         <input type="text" placeholder="Pesquisar">
       </div>
     </div>
 
-    <div class="icon-bar">
-      <div class="icon-box"><span class="icon-label"> <img :src="imgAbrirFechar" alt="Abrir/Fechar"> <br>Abrir / Fechar</span> </div>
-      <div class="icon-box"><span class="icon-label"> <img :src="imgMesa" alt="Mesas"> <br>Mesas</span></div>
-      <div class="icon-box"><span class="icon-label"> <img :src="imgDelivery" alt="Delivery"> <br>Delivery</span></div>
-      <div class="icon-box"><span class="icon-label"> <img :src="imgCaixa" alt="Caixa/PDV"> <br>Caixa / PDV</span></div>
-      <div class="icon-box"><span class="icon-label"> <img :src="imgFila" alt="Fila"> <br>Fila</span></div>
-      <div class="icon-box"><span class="icon-label"> <img :src="imgAgendamento" alt="Agendados"> <br>Agendados</span></div>
-      <div class="icon-box"><span class="icon-label"> <img :src="imgNfc" alt="NF-e"> <br>NF-e</span></div>
-      <div class="logo"> <img :src="imgLogo" alt="logo"> </div>
+    <div class="main-content">
+      <div class="icon-grid">
+
+        <div class="icon-item">
+           <img :src="imgAbrirFechar" alt="Abrir/Fechar">
+           <span>Abrir / Fechar</span>
+        </div>
+
+        <div class="icon-item">
+           <img :src="imgMesa" alt="Mesas">
+           <span>Mesas</span>
+        </div>
+
+        <div class="icon-item">
+           <img :src="imgDelivery" alt="Delivery">
+           <span>Delivery</span>
+        </div>
+
+        <div class="icon-item">
+           <img :src="imgCaixa" alt="Caixa/PDV">
+           <span>Caixa / PDV</span>
+        </div>
+
+        <div class="icon-item">
+           <img :src="imgFila" alt="Fila">
+           <span>Fila</span>
+        </div>
+
+        <div class="icon-item">
+           <img :src="imgAgendamento" alt="Agendados">
+           <span>Agendados</span>
+        </div>
+
+        <div class="icon-item">
+           <img :src="imgNfc" alt="NF-e">
+           <span>NF-e</span>
+        </div>
+
+      </div>
+
+      <div class="logo-container">
+        <img :src="imgLogo" alt="logo" class="logo">
+      </div>
     </div>
 
     <div class="actions">
       <div class="buscar-num">
-        <input 
-          type="text" 
+        <input
+          type="text"
           placeholder="Buscar número ou nome..."
           v-model="searchQuery"
         >
@@ -41,9 +92,9 @@
     </div>
 
     <div class="grade-mesas">
-      <div 
-        v-for="table in filteredTables" 
-        :key="table.id" 
+      <div
+        v-for="table in filteredTables"
+        :key="table.id"
         class="mesa"
       >
         {{ table.status }}
@@ -52,11 +103,11 @@
     </div>
 
     <footer>
-      <div>Usuário: Camilla Viana administrador</div>
-      <div>Registrado para: Restaurante Encantos da Maré</div>
+      <div>Usuário: </div>
+      <div>Registrado para: </div>
       <div>ResTapp versão 0.11</div>
     </footer>
-    
+
   </div>
 </template>
 
@@ -91,7 +142,7 @@ const filteredTables = computed(() => {
   if (!searchQuery.value) {
     return allTables.value;
   }
-  
+
   const query = searchQuery.value.toLowerCase();
   return allTables.value.filter(table => {
     return table.number.includes(query);
@@ -124,48 +175,94 @@ const filteredTables = computed(() => {
   border-radius: 15px;
   cursor: pointer;
   background-color: #F5F5F5;
+
+  text-decoration: none;
+  color: #8f8e8e;
+  display: inline-block;
+  transition: 0.3s;
 }
+
 
 .menu-item:hover {
   background: #8a8888;
   color: #F5F5F5;
 }
 
-.icon-bar {
-  display: flex;
-  gap: 30px;
-  padding: 20px;
-  align-items: center;
+.menu-item.active {
+  background-color: #ff7b00;
+  color: white;
 }
 
-.icon-box {
-  width: 100px;
-  height: 80px;
-  background: #ffffff;
-  border-radius: 8px;
-  box-shadow: 0 0 4px rgba(0,0,0,0.1);
-  padding: 8px;
-  text-align: center;
-  cursor: pointer;
-}
-.icon-box:hover {
-  background-color: #eeeeee;
+
+.main-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 40px;
 }
 
-.icon-box img {
-  width: 60px;
-  height: 60px;
+.icon-grid {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    flex-grow: 1;
 }
 
-.logo img{
-  height: 160px;
-  width: 230px;
+
+.icon-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 120px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.icon-label {
-  font-size: 13px;
-  margin-top: 5px;
-  display: block;
+.icon-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+
+.icon-item img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
+    object-fit: contain;
+}
+
+
+.icon-item span {
+    font-size: 13px;
+    font-weight: bold;
+    color: #333;
+    line-height: 1.2;
+}
+
+
+.logo-container {
+    width: 160px;
+    height: 160px;
+    margin-left: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.logo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 .actions {
@@ -181,7 +278,7 @@ const filteredTables = computed(() => {
   background: #ffffff;
   padding: 8px;
   border-radius: 30px;
-  width: 300px;
+  width: 250px;
   background-color: #BCBCBC;
 }
 .pesquisa input {
@@ -216,7 +313,7 @@ const filteredTables = computed(() => {
   font-size: 14px;
   outline: none;
 }
-  
+
 .button {
   background: #ffffff;
   padding: 8px 20px;
