@@ -67,9 +67,11 @@
         <img src="@/assets/logo.png" alt="Logo" class="logo">
       </div>
     </div>
+
     <contas-apagar-financeiro v-if="mostrarModalContas" @close="mostrarModalContas = false"/>
     <contas-receber-financeiro v-if="mostrarModalReceber" @close="mostrarModalReceber = false"/>
   </div>
+  
 </template>
 
 <script>

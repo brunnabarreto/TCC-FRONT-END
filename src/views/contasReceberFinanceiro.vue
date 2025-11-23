@@ -16,8 +16,6 @@
               <label>Tipo:</label>
               <select v-model="form.tipo" class="custom-input">
                 <option value="">Outras Receitas</option>
-                <option value="venda">Venda de Mercadoria</option>
-                <option value="servico">Prestação de Serviço</option>
               </select>
             </div>
 

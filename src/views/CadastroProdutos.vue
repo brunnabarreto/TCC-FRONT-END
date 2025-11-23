@@ -50,15 +50,9 @@
             <div class="linha">
               <select v-model="produto.tamanho" class="input">
                 <option disabled value="">Tamanho</option>
-                <option>P</option>
-                <option>M</option>
-                <option>G</option>
               </select>
               <select v-model="produto.categoria" class="input">
                 <option disabled value="">Categoria</option>
-                <option>Bebida</option>
-                <option>Comida</option>
-                <option>Sobremesa</option>
               </select>
             </div>
 
@@ -95,8 +89,8 @@
     </div>
 
     <footer>
-      <div>Usuário: Admin</div>
-      <div>Registrado para: Restaurante Encantos da Maré</div>
+      <div>Usuário: </div>
+      <div>Registrado para: </div>
       <div>ResTapp versão 0.11</div>
     </footer>
   </div>

@@ -1,15 +1,12 @@
 <template>
   <div class="modal-overlay" @click.self="$emit('close')">
-
     <div class="modal-window">
-
       <div class="modal-header">
         <h3>Nova Conta a Pagar</h3>
         <button class="btn-close" @click="$emit('close')">×</button>
       </div>
 
       <div class="modal-body">
-
         <fieldset class="group-box">
           <legend>Dados Principais</legend>
 
@@ -19,8 +16,6 @@
               <div class="input-group">
                 <select v-model="form.categoria" class="custom-input">
                   <option value="">Selecione...</option>
-                  <option value="agua">Água</option>
-                  <option value="luz">Energia</option>
                 </select>
                 <button class="btn-plus">+ Novo</button>
               </div>
@@ -28,7 +23,7 @@
 
             <div class="col-fixed">
               <label>Vencimento:</label>
-              <input type="date" v-model="form.vencimento" class="custom-input">
+              <input type="date" v-model="form.vencimento" class="custom-input" />
             </div>
           </div>
 
@@ -45,20 +40,24 @@
 
             <div class="col-fixed">
               <label>Valor:</label>
-              <input type="number" v-model="form.valor" placeholder="0,00" class="custom-input">
+              <input type="number" v-model="form.valor" placeholder="0,00" class="custom-input" />
             </div>
           </div>
 
           <div class="row">
             <div class="col-full">
               <label>Descrição:</label>
-              <input type="text" v-model="form.descricao" placeholder="Ex: Conta de água Jan/2025..."
-                class="custom-input">
+              <input
+                type="text"
+                v-model="form.descricao"
+                placeholder="Ex:Descrição da conta..."
+                class="custom-input"
+              />
             </div>
           </div>
 
           <div class="row-check">
-            <input type="checkbox" id="manter" v-model="form.manterCampos">
+            <input type="checkbox" id="manter" v-model="form.manterCampos" />
             <label for="manter">Manter os campos Categoria e Fornecedor ao salvar</label>
           </div>
         </fieldset>
@@ -66,7 +65,7 @@
         <div class="simple-box">
           <strong>Repetir esta conta:</strong>
           <label>Num. Repetições:</label>
-          <input type="number" v-model="form.repeticoes" class="custom-input small-input" min="1">
+          <input type="number" v-model="form.repeticoes" class="custom-input small-input" min="1" />
 
           <label>Frequência:</label>
           <select v-model="form.frequencia" class="custom-input">
@@ -79,36 +78,38 @@
 
         <fieldset class="group-box" :class="{ disabled: !form.isPago }">
           <legend>
-            <input type="checkbox" v-model="form.isPago" id="chkPago">
+            <input type="checkbox" v-model="form.isPago" id="chkPago" />
             <label for="chkPago">Conta Paga</label>
           </legend>
 
           <div class="row" v-if="form.isPago">
             <div class="col">
               <label>Pago em:</label>
-              <input type="date" v-model="form.dataPagamento" class="custom-input">
+              <input type="date" v-model="form.dataPagamento" class="custom-input" />
             </div>
             <div class="col">
               <label>(-) Descontos:</label>
-              <input type="number" v-model="form.desconto" class="custom-input">
+              <input type="number" v-model="form.desconto" class="custom-input" />
             </div>
             <div class="col">
               <label>(+) Juros/Multa:</label>
-              <input type="number" v-model="form.juros" class="custom-input">
+              <input type="number" v-model="form.juros" class="custom-input" />
             </div>
             <div class="col">
               <label>Valor Pago:</label>
-              <input type="number" :value="calculaTotalPago" disabled class="custom-input bg-gray">
+              <input
+                type="number"
+                :value="calculaTotalPago"
+                disabled
+                class="custom-input bg-gray"
+              />
             </div>
           </div>
         </fieldset>
-
       </div>
 
       <div class="modal-footer">
-        <button class="btn-text" @click="$emit('close')">
-          <span>‹</span> Voltar
-        </button>
+        <button class="btn-text" @click="$emit('close')"><span>‹</span> Voltar</button>
 
         <div class="right-actions">
           <button class="btn-text orange-btn" @click="salvar">
@@ -119,15 +120,14 @@
           </button>
         </div>
       </div>
-
     </div>
   </div>
 </template>
 
 <script setup>
-import { reactive, computed } from 'vue';
+import { reactive, computed } from 'vue'
 
-const emit = defineEmits(['close', 'save']);
+const emit = defineEmits(['close', 'save'])
 
 const form = reactive({
   categoria: '',
@@ -141,25 +141,25 @@ const form = reactive({
   isPago: false,
   dataPagamento: '',
   desconto: 0,
-  juros: 0
-});
+  juros: 0,
+})
 
 const calculaTotalPago = computed(() => {
-  const val = parseFloat(form.valor || 0);
-  const desc = parseFloat(form.desconto || 0);
-  const jur = parseFloat(form.juros || 0);
-  return (val - desc + jur).toFixed(2);
-});
+  const val = parseFloat(form.valor || 0)
+  const desc = parseFloat(form.desconto || 0)
+  const jur = parseFloat(form.juros || 0)
+  return (val - desc + jur).toFixed(2)
+})
 
 const salvar = () => {
-  console.log('Salvando...', form);
-  emit('save', form);
-  emit('close');
-};
+  console.log('Salvando...', form)
+  emit('save', form)
+  emit('close')
+}
 
 const salvarNovo = () => {
-  console.log('Salvando e limpando...', form);
-};
+  console.log('Salvando e limpando...', form)
+}
 </script>
 
 <style scoped>
@@ -261,6 +261,13 @@ const salvarNovo = () => {
 
 .col {
   flex: 1;
+}
+
+input[type="checkbox"] {
+  accent-color: #ff8c00;
+  width: 16px; 
+  height: 16px;
+  cursor: pointer;
 }
 
 label {
@@ -372,7 +379,7 @@ label:hover {
 }
 
 .btn-text:not(.orange-btn):hover {
-    background-color: #e0e0e0;
+  background-color: #e0e0e0;
 }
 
 .row-check {
