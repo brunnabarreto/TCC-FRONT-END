@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 // Importação das telas (Verifique se os nomes dos arquivos estão exatos)
-import Login from '../views/login.vue'
+import Login from '../views/LoginPage.vue'
 import CadastroUsuario from '../views/cadastroUsuario.vue'
 import CadastroProdutos from '../views/CadastroProdutos.vue'
 import TelaMesa from '../views/TelaMesa.vue'

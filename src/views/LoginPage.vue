@@ -1,17 +1,16 @@
- <template>
+<template>
   <div class="login-container">
-
     <div class="login-box">
       <div class="logo">
-        <img :src="logoUrl" alt="RestApp Logo">
+        <img :src="logoUrl" alt="RestApp Logo" />
       </div>
 
       <form @submit.prevent="handleLogin">
         <label for="email">Email:</label>
-        <input type="email" id="email" placeholder="Digite seu email" v-model="email">
+        <input type="email" id="email" placeholder="Digite seu email" v-model="email" />
 
         <label for="senha">Senha:</label>
-        <input type="password" id="senha" placeholder="Digite sua senha" v-model="senha">
+        <input type="password" id="senha" placeholder="Digite sua senha" v-model="senha" />
 
         <a href="#" class="esquec-senha">Esqueci minha senha</a>
 
@@ -19,33 +18,34 @@
       </form>
 
       <router-link to="/cadastro-usuario" class="cadastroUsuario">
-          Ainda não tem cadastro? Clique aqui
+        Ainda não tem cadastro? Clique aqui
       </router-link>
     </div>
 
     <p class="version">ResTapp - versão 0.11</p>
-
   </div>
-  </template>
+</template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import logoUrl from '@/assets//logo.png';
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import logoUrl from '@/assets/logo.png'
+import { useAuthStore } from '@/services/auth'
 
+const email = ref('')
+const senha = ref('')
+const router = useRouter()
+const authStore = useAuthStore()
 
-const email = ref('');
-const senha = ref('');
-const router = useRouter();
-const handleLogin = () => {
-  console.log('Tentativa de login com:');
-  console.log('Email:', email.value);
-  console.log('Senha:', senha.value);
-
-  router.push({ name: 'TelaMesa' });
-};
+const handleLogin = async () => {
+  const success = await authStore.login(email.value, senha.value)
+  if (success) {
+    router.push({ name: 'Mesa' })
+  } else {
+    alert('Email ou senha incorretos')
+  }
+}
 </script>
-
 <style>
 * {
   margin: 0;
@@ -69,7 +69,10 @@ body {
   flex-direction: column;
   align-items: center;
   width: 100%;
+  min-height: 100vh;
+  justify-content: center; /* centraliza só o login */
 }
+
 
 .login-box {
   background-color: #fff;
@@ -83,21 +86,18 @@ body {
 .logo img {
   width: 250px;
   height: 180px;
-
 }
 
 form {
   display: flex;
   flex-direction: column;
   gap: 12px;
-
 }
 
 label {
   text-align: left;
   font-size: 14px;
   color: #555;
-
 }
 
 input {
@@ -108,7 +108,6 @@ input {
   transition: border 0.2s;
   background-color: rgb(228, 228, 228);
 }
-
 
 input:focus {
   border-color: #ff7b00;
@@ -124,7 +123,8 @@ input:focus {
 .esquec-senha:hover {
   text-decoration: underline;
 }
-  .novo-cadastro {
+
+.novo-cadastro {
   text-align: center;
   font-size: 13px;
   color: #757575;
@@ -151,6 +151,7 @@ input:focus {
   text-decoration: underline;
   color: #ff7b00;
 }
+
 .button-login {
   background-color: #ff7b00;
   color: white;

@@ -154,9 +154,16 @@ const filteredTables = computed(() => {
 <style scoped>
 .main-container {
   margin: 0;
+  padding: 0;
   font-family: Arial, Helvetica, sans-serif;
   background: linear-gradient(to bottom, #ffffff 10%, #ff8c00 40%, #ff7a00 100%);
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
+  overflow-y: auto;
 }
 
 .menu {
@@ -168,6 +175,9 @@ const filteredTables = computed(() => {
   font-size: 14px;
   font-weight: bold;
   color: #8f8e8e;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .menu-item {
@@ -180,6 +190,7 @@ const filteredTables = computed(() => {
   color: #8f8e8e;
   display: inline-block;
   transition: 0.3s;
+  white-space: nowrap;
 }
 
 
@@ -278,9 +289,11 @@ const filteredTables = computed(() => {
   background: #ffffff;
   padding: 8px;
   border-radius: 30px;
-  width: 250px;
+  width: 200px;
   background-color: #BCBCBC;
+  flex-shrink: 0;
 }
+
 .pesquisa input {
   border: none;
   flex: 1;
@@ -290,6 +303,7 @@ const filteredTables = computed(() => {
   background-color: #BCBCBC;
   color: #e6e6e6;
 }
+
 .pesquisa img {
   width: 16px;
   height: 16px;
