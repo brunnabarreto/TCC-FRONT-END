@@ -91,14 +91,53 @@
       <div class="button">Iniciar pedido de Balcão</div>
     </div>
 
+    <div v-if="carregando" style="padding:20px; font-size:18px;">
+      Carregando mesas...
+    </div>
+
+    <div v-if="erro" style="padding:20px; color:red;">
+      {{ erro }}
+    </div>
+
+    <!-- LISTA DE MESAS LIVRES (NOVO BLOCO) -->
+    <div class="mesas-livres-box">
+      <strong>Mesas disponíveis:</strong>
+
+      <div class="mesas-livres-lista">
+        <div
+          v-for="n in mesasLivres"
+          :key="n"
+          class="mesa-livre-item"
+        >
+          {{ String(n).padStart(2, '0') }}
+        </div>
+      </div>
+    </div>
+
+    <!-- SUA GRADE ORIGINAL (SEM MEXER NO VISUAL) -->
     <div class="grade-mesas">
       <div
         v-for="table in filteredTables"
         :key="table.id"
+        :class="getMesaClasse(table.status)"
         class="mesa"
+        @click="abrirMesa(table)"
+        style="position: relative;"
       >
-        {{ table.status }}
+        <div>{{ table.status }}</div>
+
+        <!-- Badge de quantidade de pessoas-->
+        <div v-if="table.pessoas > 0" class="badge">
+          {{ table.pessoas }}
+        </div>
+
+        <!-- Número -->
         <div class="mesa-num">{{ table.number }}</div>
+
+        <!-- Nome do cliente -->
+        <div v-if="table.cliente" class="mesa-cliente">
+          {{ table.cliente }}
+        </div>
       </div>
     </div>
 
@@ -107,12 +146,12 @@
       <div>Registrado para: </div>
       <div>ResTapp versão 0.11</div>
     </footer>
-
   </div>
-</template>
+  </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from "vue";
+import api from "@/services/api";
 
 import imgBuscar from '@/assets//imgbuscar.png';
 import imgAbrirFechar from '@/assets/imgabrir-fechar.png';
@@ -124,33 +163,93 @@ import imgAgendamento from '@/assets/imgagendamento.png';
 import imgNfc from '@/assets/imgnfc.png';
 import imgLogo from '@/assets/logo.png';
 
+const searchQuery = ref("");
 
-const searchQuery = ref('');
+const mesas = ref([]);
+const carregando = ref(false);
+const erro = ref(null);
 
-const allTables = ref(
-  Array.from({ length: 100 }, (_, index) => {
-    const id = index + 1;
-    return {
-      id: id,
-      number: String(id).padStart(2, '0'),
-      status: 'Abrir',
-    };
-  })
-);
+let intervalo = null;
 
-const filteredTables = computed(() => {
-  if (!searchQuery.value) {
-    return allTables.value;
+// Buscar mesas no backend
+async function buscarMesas() {
+  carregando.value = true;
+  erro.value = null;
+
+  try {
+    const response = await api.get("/principal/mesas/abertas");
+
+    mesas.value = response.data.map(m => ({
+      number: String(m.numeroMesa).padStart(2, "0"),
+      cliente: m.nomeCliente ?? null,
+      status: m.status ?? "ABERTA"
+    }));
+
+  } catch (e) {
+    erro.value = "Erro ao carregar mesas.";
+    console.error(e);
+  } finally {
+    carregando.value = false;
   }
+}
 
-  const query = searchQuery.value.toLowerCase();
-  return allTables.value.filter(table => {
-    return table.number.includes(query);
-  });
+// Auto-refresh a cada 5 segundos
+onMounted(() => {
+  buscarMesas();
+  intervalo = setInterval(buscarMesas, 5000);
 });
 
-</script>
+onUnmounted(() => {
+  clearInterval(intervalo);
+});
 
+// Clique da mesa
+function abrirMesa(table) {
+  console.log("Mesa clicada:", table);
+}
+
+// Filtragem
+const filteredTables = computed(() => {
+  if (!searchQuery.value) return mesas.value;
+
+  const q = searchQuery.value.toLowerCase();
+  return mesas.value.filter(t => t.number.includes(q));
+});
+
+// Cores automáticas
+const getMesaClasse = (status) => {
+  switch (status) {
+    case "OCUPADA":
+      return "mesa-ocupada";
+    case "FECHAMENTO":
+      return "mesa-fechamento";
+    case "FECHADA":
+      return "mesa-aberta";
+    default:
+      return "mesa";
+  }
+};
+
+/////////////////////////////////////////////////////////////
+// >>>>> BLOCO NOVO: CÁLCULO DE MESAS LIVRES <<<<<<
+/////////////////////////////////////////////////////////////
+
+// Lista fixa de 1 a 100
+const todasMesas = Array.from({ length: 100 }, (_, i) => i + 1);
+
+// Pega somente as mesas ocupadas e em fechamento
+const mesasOcupadasOuFechamento = computed(() =>
+  mesas.value
+    .filter(m => m.status === 'OCUPADA' || m.status === 'FECHAMENTO')
+    .map(m => Number(m.number))
+);
+
+// Mesas livres = todas que não estão ocupadas ou em fechamento
+const mesasLivres = computed(() =>
+  todasMesas.filter(n => !mesasOcupadasOuFechamento.value.includes(n))
+);
+
+</script>
 <style scoped>
 .main-container {
   margin: 0;
@@ -359,6 +458,56 @@ const filteredTables = computed(() => {
   cursor: pointer;
   transition: 0.2s;
   box-sizing: border-box;
+}
+
+.mesa-aberta {
+  background: #b8ffb8;
+}
+
+.mesa-ocupada {
+  background: #ffd08a;
+}
+
+.mesa-fechamento {
+  background: #ff9a9a;
+}
+
+.mesas-livres-box {
+  margin: 20px 0;
+  font-size: 18px;
+}
+
+.mesas-livres-lista {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mesa-livre-item {
+  background: #b8ffb8;
+  padding: 6px 10px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+/* Bolinha de quantidade de pessoas */
+.badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: #ff3d3d;
+  color: white;
+  font-size: 11px;
+  padding: 3px 7px;
+  border-radius: 50%;
+}
+
+/* Cliente */
+.mesa-cliente {
+  font-size: 11px;
+  margin-top: 5px;
+  color: #333;
 }
 
 .mesa:hover {

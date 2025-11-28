@@ -18,13 +18,15 @@ export const useAuthStore = defineStore('auth', {
         const token = response.data.token
         const user = jwtDecode(token)
 
+        // Salva nos estados
         this.token = token
         this.user = user
 
+        // Salva no localStorage
         localStorage.setItem('token', token)
         localStorage.setItem('user', JSON.stringify(user))
 
-        // Configura o token no header de todas as requisições
+        // Injeta no axios para próximas requisições
         api.defaults.headers.common['Authorization'] = `Bearer ${token}`
 
         return true
