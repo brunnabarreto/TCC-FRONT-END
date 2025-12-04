@@ -71,7 +71,7 @@
     <contas-apagar-financeiro v-if="mostrarModalContas" @close="mostrarModalContas = false"/>
     <contas-receber-financeiro v-if="mostrarModalReceber" @close="mostrarModalReceber = false"/>
   </div>
-  
+
 </template>
 
 <script>
@@ -82,7 +82,7 @@ import imgPagar from '@/assets/contas a pagar.png.png';
 import imgReceber from '@/assets/contas a receber.png.png';
 import imgLogo from '@/assets/logo.png';
 
-import contasApagarFinanceiro from './contasApagarFinanceiro.vue';
+import contasApagarFinanceiro from './ContasPagar.vue';
 import ContasReceberFinanceiro from './contasReceberFinanceiro.vue';
 export default {
   name: "TelaFinanceiro",

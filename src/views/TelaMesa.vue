@@ -485,8 +485,8 @@ const mesasLivres = computed(() =>
 }
 
 .mesa-livre-item {
-  background: #b8ffb8;
-  padding: 6px 10px;
+  background: #e6e6e6;
+  padding: 30px 30px;
   border-radius: 5px;
   font-weight: bold;
 }

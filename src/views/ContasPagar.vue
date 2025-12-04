@@ -15,9 +15,17 @@
               <label>Categoria:</label>
               <div class="input-group">
                 <select v-model="form.categoria" class="custom-input">
-                  <option value="">Selecione...</option>
+                  <option disabled value="">Selecione...</option>
+
+                  <option
+                    v-for="c in categorias"
+                    :key="c.id"
+                    :value="c.id"
+                  >
+                    {{ c.nomeCategoria }}
+                  </option>
                 </select>
-                <button class="btn-plus">+ Novo</button>
+                <!-- <button class="btn-plus">+ Novo</button> -->
               </div>
             </div>
 
@@ -32,9 +40,17 @@
               <label>Fornecedor:</label>
               <div class="input-group">
                 <select v-model="form.fornecedor" class="custom-input">
-                  <option value="">Selecione...</option>
+                  <option disabled value="">Selecione...</option>
+
+                  <option
+                    v-for="fornecedores in fornecedores"
+                    :key="fornecedores.id"
+                    :value="fornecedores.id"
+                  >
+                    {{ fornecedores.nomeFantasia }}
+                  </option>
                 </select>
-                <button class="btn-plus">+ Novo</button>
+                <!-- <button class="btn-plus">+ Novo</button> -->
               </div>
             </div>
 
@@ -62,7 +78,7 @@
           </div>
         </fieldset>
 
-        <div class="simple-box">
+        <!-- <div class="simple-box">
           <strong>Repetir esta conta:</strong>
           <label>Num. Repetições:</label>
           <input type="number" v-model="form.repeticoes" class="custom-input small-input" min="1" />
@@ -74,7 +90,7 @@
           </select>
 
           <button class="btn-action outline">Criar Repetições</button>
-        </div>
+        </div> -->
 
         <fieldset class="group-box" :class="{ disabled: !form.isPago }">
           <legend>
@@ -125,9 +141,13 @@
 </template>
 
 <script setup>
-import { reactive, computed } from 'vue'
+import { reactive, computed, ref, onMounted } from 'vue'
+import api from '@/services/api'
 
-const emit = defineEmits(['close', 'save'])
+// const emit = defineEmits(['close', 'save'])
+
+const categorias = ref([])
+const fornecedores = ref([])
 
 const form = reactive({
   categoria: '',
@@ -144,6 +164,29 @@ const form = reactive({
   juros: 0,
 })
 
+onMounted(async () => {
+  await carregarCategorias()
+  await carregarFornecedores()
+})
+
+const carregarCategorias = async () => {
+  try {
+    const { data } = await api.get('/financeiro/categoria-contas')
+    categorias.value = data
+  } catch (err) {
+    console.error("Erro ao carregar categorias:", err)
+  }
+}
+
+const carregarFornecedores = async () => {
+  try {
+    const { data } = await api.get('/financeiro/fornecedor')
+    fornecedores.value = data
+  } catch (err) {
+    console.error("Erro ao carregar fornecedores:", err)
+  }
+}
+
 const calculaTotalPago = computed(() => {
   const val = parseFloat(form.valor || 0)
   const desc = parseFloat(form.desconto || 0)
@@ -151,10 +194,31 @@ const calculaTotalPago = computed(() => {
   return (val - desc + jur).toFixed(2)
 })
 
-const salvar = () => {
-  console.log('Salvando...', form)
-  emit('save', form)
-  emit('close')
+const salvar = async () => {
+  try {
+    const payload = {
+      categoriaId: form.categoria,
+      fornecedorId: form.fornecedor,
+      dataVencimento: form.vencimento,
+      valor: form.valor,
+      descricao: form.descricao,
+      // isPago: form.isPago,
+      dataPagamento: form.dataPagamento,
+      // desconto: form.desconto,
+      // juros: form.juros
+    }
+
+    const response = await api.post("/financeiro/contas-pagar", payload)
+
+    console.log("SUCESSO:", response.data)
+
+    return true
+
+  } catch (error) {
+    console.error("Erro ao salvar:", error.response?.data || error)
+    alert("Erro ao salvar a conta! Veja o console.")
+    return false
+  }
 }
 
 const salvarNovo = () => {
@@ -265,7 +329,7 @@ const salvarNovo = () => {
 
 input[type="checkbox"] {
   accent-color: #ff8c00;
-  width: 16px; 
+  width: 16px;
   height: 16px;
   cursor: pointer;
 }

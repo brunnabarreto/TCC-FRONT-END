@@ -40,19 +40,36 @@
             <div class="linha">
               <input v-model="produto.nome" type="text" placeholder="Nome" class="input" />
               <input
-                v-model.number="produto.valor"
-                type="number"
-                placeholder="Valor"
+                v-model="produto.precoCusto"
+                type="text"
+                placeholder="0,00"
                 class="input"
               />
             </div>
 
             <div class="linha">
-              <select v-model="produto.tamanho" class="input">
+              <input
+                v-model="produto.precoVenda"
+                type="texte"
+                placeholder="0,00"
+                class="input"
+              />
+            </div>
+
+            <div class="linha">
+              <!-- <select v-model="produto.tamanho" class="input">
                 <option disabled value="">Tamanho</option>
-              </select>
+              </select> -->
               <select v-model="produto.categoria" class="input">
                 <option disabled value="">Categoria</option>
+
+                <option
+                  v-for="categoriaProdutos in categoriaProdutos"
+                  :key="categoriaProdutos.id"
+                  :value="categoriaProdutos.id"
+                >
+                  {{ categoriaProdutos.nomeCategoriaProdutos }}
+                </option>
               </select>
             </div>
 
@@ -97,21 +114,40 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
-
+import { ref, onMounted } from 'vue'
+import api from '@/services/api'
 import imgBuscar from '@/assets/imgbuscar.png'
 import imgLogo from '@/assets/logo.png'
 import imgPedidos from '@/assets/pedidos.png'
 import imgCardapio from '@/assets/iconecardapio.png'
 import imgProdutos from '@/assets/produtos.jpg'
 
+const categoriaProdutos = ref([])
+onMounted(async () => {
+  try {
+    const response = await api.get('/produtos/categoria-produtos')
+    categoriaProdutos.value = response.data
+  } catch (error) {
+    console.error('Erro ao carregar categorias de produtos:', error)
+  }
+})
+
 const produto = ref({
   nome: '',
-  valor: null,
-  tamanho: '',
+  precoCusto: null,
+  precoVenda: null,
   categoria: '',
   descricao: '',
   foto: null,
+})
+
+onMounted(async () => {
+  try {
+    const response = await api.get('/produtos/categoria-produtos')
+    categoriaProdutos.value = response.data
+  } catch (error) {
+    console.error('Erro ao carregar categorias de produtos:', error)
+  }
 })
 
 const nomeArquivo = ref('Nenhum arquivo selecionado')
@@ -144,10 +180,60 @@ const cancelar = () => {
   nomeArquivo.value = 'Nenhum arquivo selecionado'
 }
 
-const salvarProduto = () => {
-  console.log('Produto cadastrado:', produto.value)
-  alert('Produto salvo com sucesso!')
-  cancelar()
+const salvarProduto = async () => {
+  // console.log('Produto cadastrado:', produto.value)
+  // alert('Produto salvo com sucesso!')
+  // cancelar()
+  // try {
+  //   const formData = new FormData()
+  //   formData.append('nomeProduto', produto.value.nome)
+  //   formData.append('precoCusto', produto.value.precoCusto)
+  //   formData.append('precoVenda', produto.value.precoVenda)
+  //   formData.append('categoria', produto.value.categoria)
+  //   formData.append('descricao', produto.value.descricao)
+  //   if (produto.value.foto) {
+  //     formData.append('foto', produto.value.foto)
+  //   }
+
+  //   api
+  //     .post('/produtos/produto', formData, {
+  //       headers: {
+  //         'Content-Type': 'multipart/form-data',
+  //       },
+  //     })
+  //     .then(() => {
+  //       alert('Produto salvo com sucesso!')
+  //       cancelar()
+  //     })
+  //     .catch((error) => {
+  //       console.error('Erro ao salvar o produto:', error)
+  //       alert('Erro ao salvar o produto. Tente novamente.')
+  //     })
+  // } catch (error) {
+  //   console.error('Erro ao preparar o produto para envio:', error)
+  //   alert('Erro ao preparar o produto. Tente novamente.')
+  // }
+
+  try
+  {
+    const payload = {
+      nomeProduto: produto.value.nome,
+      idCategoriaProdutos: produto.value.categoria,
+      precoCusto: Number(produto.value.precoCusto.replace(',', '.')),
+      precoVenda: Number(produto.value.precoVenda.replace(',', '.')),
+      descricao: produto.value.descricao,
+      imagem: produto.value.imagem // ou remova se não for obrigatório
+    }
+
+    const response = await api.post("/produtos/produto", payload)
+    alert('Produto salvo com sucesso!')
+
+    console.log("SUCESSO:", response.data)
+
+  } catch (error) {
+    console.error('Erro ao salvar o produto:', error)
+    alert('Erro ao salvar o produto. Tente novamente.')
+  }
 }
 </script>
 
