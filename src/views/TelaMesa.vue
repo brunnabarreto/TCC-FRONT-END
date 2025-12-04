@@ -34,42 +34,40 @@
 
     <div class="main-content">
       <div class="icon-grid">
-
         <div class="icon-item">
-           <img :src="imgAbrirFechar" alt="Abrir/Fechar">
-           <span>Abrir / Fechar</span>
+            <img :src="imgAbrirFechar" alt="Abrir/Fechar">
+            <span>Abrir / Fechar</span>
         </div>
 
         <div class="icon-item">
-           <img :src="imgMesa" alt="Mesas">
-           <span>Mesas</span>
+            <img :src="imgMesa" alt="Mesas">
+            <span>Mesas</span>
         </div>
 
         <div class="icon-item">
-           <img :src="imgDelivery" alt="Delivery">
-           <span>Delivery</span>
+            <img :src="imgDelivery" alt="Delivery">
+            <span>Delivery</span>
         </div>
 
         <div class="icon-item">
-           <img :src="imgCaixa" alt="Caixa/PDV">
-           <span>Caixa / PDV</span>
+            <img :src="imgCaixa" alt="Caixa/PDV">
+            <span>Caixa / PDV</span>
         </div>
 
         <div class="icon-item">
-           <img :src="imgFila" alt="Fila">
-           <span>Fila</span>
+            <img :src="imgFila" alt="Fila">
+            <span>Fila</span>
         </div>
 
         <div class="icon-item">
-           <img :src="imgAgendamento" alt="Agendados">
-           <span>Agendados</span>
+            <img :src="imgAgendamento" alt="Agendados">
+            <span>Agendados</span>
         </div>
 
         <div class="icon-item">
-           <img :src="imgNfc" alt="NF-e">
-           <span>NF-e</span>
+            <img :src="imgNfc" alt="NF-e">
+            <span>NF-e</span>
         </div>
-
       </div>
 
       <div class="logo-container">
@@ -99,7 +97,6 @@
       {{ erro }}
     </div>
 
-    <!-- LISTA DE MESAS LIVRES (NOVO BLOCO) -->
     <div class="mesas-livres-box">
       <strong>Mesas disponíveis:</strong>
 
@@ -114,7 +111,6 @@
       </div>
     </div>
 
-    <!-- SUA GRADE ORIGINAL (SEM MEXER NO VISUAL) -->
     <div class="grade-mesas">
       <div
         v-for="table in filteredTables"
@@ -126,15 +122,12 @@
       >
         <div>{{ table.status }}</div>
 
-        <!-- Badge de quantidade de pessoas-->
         <div v-if="table.pessoas > 0" class="badge">
           {{ table.pessoas }}
         </div>
 
-        <!-- Número -->
         <div class="mesa-num">{{ table.number }}</div>
 
-        <!-- Nome do cliente -->
         <div v-if="table.cliente" class="mesa-cliente">
           {{ table.cliente }}
         </div>
@@ -146,13 +139,20 @@
       <div>Registrado para: </div>
       <div>ResTapp versão 0.11</div>
     </footer>
+
+    <TelaComanda
+      v-if="showComandaModal"
+      :mesaId="selectedMesaId"
+      @close="showComandaModal = false"
+    />
+
   </div>
-  </template>
+</template>
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import api from "@/services/api";
-
+import TelaComanda from './TelaComanda.vue';
 import imgBuscar from '@/assets//imgbuscar.png';
 import imgAbrirFechar from '@/assets/imgabrir-fechar.png';
 import imgMesa from '@/assets/imgmesa.png';
@@ -164,10 +164,11 @@ import imgNfc from '@/assets/imgnfc.png';
 import imgLogo from '@/assets/logo.png';
 
 const searchQuery = ref("");
-
 const mesas = ref([]);
 const carregando = ref(false);
 const erro = ref(null);
+const showComandaModal = ref(false);
+const selectedMesaId = ref(null);
 
 let intervalo = null;
 
@@ -206,6 +207,9 @@ onUnmounted(() => {
 // Clique da mesa
 function abrirMesa(table) {
   console.log("Mesa clicada:", table);
+const mesaId = String(table.number).replace(/^0+/, '');
+  selectedMesaId.value = mesaId;
+  showComandaModal.value = true;
 }
 
 // Filtragem
@@ -485,8 +489,8 @@ const mesasLivres = computed(() =>
 }
 
 .mesa-livre-item {
-  background: #b8ffb8;
-  padding: 6px 10px;
+  background: #e6e6e6;
+  padding: 30px 30px;
   border-radius: 5px;
   font-weight: bold;
 }

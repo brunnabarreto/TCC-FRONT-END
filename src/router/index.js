@@ -7,6 +7,7 @@ import CadastroProdutos from '../views/CadastroProdutos.vue'
 import TelaMesa from '../views/TelaMesa.vue'
 import Financeiro from '../views/financeiro.vue'
 
+
 const routes = [
   {
     path: '/',
@@ -35,8 +36,8 @@ const routes = [
     name: 'Financeiro',
     component: Financeiro,
   },
-  // Rotas "fantasmas" para os botões que ainda não têm tela (para não dar erro)
-  { path: '/beneficios', name: 'Beneficios', component: TelaMesa }, // Redireciona p/ mesa provisoriamente
+  
+  { path: '/beneficios', name: 'Beneficios', component: TelaMesa },
   { path: '/relatorios', name: 'Relatorios', component: TelaMesa },
   { path: '/configuracoes', name: 'Configuracoes', component: TelaMesa },
 ]
