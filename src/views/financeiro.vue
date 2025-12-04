@@ -11,21 +11,19 @@
       PRODUTOS
     </router-link>
 
-    <router-link to="/beneficios" class="nav-item" active-class="active">
-      BENEFÍCIOS
-    </router-link>
-
     <router-link to="/financeiro" class="nav-item" active-class="active">
       FINANCEIRO
     </router-link>
 
-    <router-link to="/relatorios" class="nav-item" active-class="active">
+    <div class="nav-item em-desenvolvimento">
       RELATÓRIOS
-    </router-link>
+      <span class="badge-dev-menu">Em desenvolvimento</span>
+    </div>
 
-    <router-link to="/configuracoes" class="nav-item" active-class="active">
+    <div class="nav-item em-desenvolvimento">
       CONFIGURAÇÕES
-    </router-link>
+      <span class="badge-dev-menu">Em desenvolvimento</span>
+    </div>
   </div>
 
   <div class="search-bar">
@@ -36,19 +34,22 @@
     <div class="main-content">
       <div class="icon-grid">
 
-        <div class="icon-item" @click="navegarPara('formas-pagamento')">
+        <div class="icon-item em-desenvolvimento" @click="navegarPara('formas-pagamento')">
           <img :src="imgFormasPagamento" alt="Forma de Pagamento">
           <span>Formas de Pagamento</span>
+          <div class="badge-dev">Em desenvolvimento</div>
         </div>
 
-        <div class="icon-item" @click="navegarPara('categoria-contas')">
+        <div class="icon-item em-desenvolvimento" @click="navegarPara('categoria-contas')">
           <img :src="imgCategoriaContas" alt="Categoria de Contas">
           <span>Categoria de Contas</span>
+          <div class="badge-dev">Em desenvolvimento</div>
         </div>
 
-        <div class="icon-item" @click="navegarPara('fornecedores')">
+        <div class="icon-item em-desenvolvimento" @click="navegarPara('fornecedores')">
           <img :src="imgFornecedores" alt="Fornecedores">
           <span>Fornecedores</span>
+          <div class="badge-dev">Em desenvolvimento</div>
         </div>
 
         <div class="icon-item" @click="abrirModalContas">
@@ -56,9 +57,10 @@
           <span>Contas a Pagar</span>
         </div>
 
-        <div class="icon-item" @click="abrirModalReceber">
+        <div class="icon-item em-desenvolvimento" @click="abrirModalReceber">
           <img :src="imgContasReceber" alt="Contas a Receber">
           <span>Contas a Receber</span>
+          <div class="badge-dev">Em desenvolvimento</div>
         </div>
 
       </div>
@@ -183,6 +185,31 @@ export default {
     box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
 }
 
+.nav-item.em-desenvolvimento {
+  opacity: 0.6;
+  cursor: not-allowed;
+  position: relative;
+}
+
+.nav-item.em-desenvolvimento:hover {
+  background: #f5f5f5;
+  color: #8f8e8e;
+}
+
+.badge-dev-menu {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff3d3d;
+  color: white;
+  font-size: 7px;
+  padding: 2px 4px;
+  border-radius: 8px;
+  font-weight: bold;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 .search-bar input {
     padding: 10px 15px;
     border: none;
@@ -239,11 +266,36 @@ export default {
     text-align: center;
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
 }
 
 .icon-item:hover {
     transform: translateY(-3px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.icon-item.em-desenvolvimento {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.icon-item.em-desenvolvimento:hover {
+    transform: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.badge-dev {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ff3d3d;
+    color: white;
+    font-size: 9px;
+    padding: 3px 6px;
+    border-radius: 10px;
+    font-weight: bold;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .icon-item img {

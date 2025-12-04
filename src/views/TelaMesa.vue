@@ -10,21 +10,19 @@
         PRODUTOS
       </router-link>
 
-      <router-link to="/beneficios" class="menu-item" active-class="active">
-        BENEFÍCIOS
-      </router-link>
-
       <router-link to="/financeiro" class="menu-item" active-class="active">
         FINANCEIRO
       </router-link>
 
-      <router-link to="/relatorios" class="menu-item" active-class="active">
+      <div class="menu-item em-desenvolvimento">
         RELATÓRIOS
-      </router-link>
+        <span class="badge-dev-menu">Em desenvolvimento</span>
+      </div>
 
-      <router-link to="/configuracoes" class="menu-item" active-class="active">
+      <div class="menu-item em-desenvolvimento">
         CONFIGURAÇÕES
-      </router-link>
+        <span class="badge-dev-menu">Em desenvolvimento</span>
+      </div>
 
       <div class="pesquisa" style="width:250px;">
         <img :src="imgBuscar" alt="iconebusca">
@@ -34,9 +32,10 @@
 
     <div class="main-content">
       <div class="icon-grid">
-        <div class="icon-item">
+        <div class="icon-item em-desenvolvimento">
             <img :src="imgAbrirFechar" alt="Abrir/Fechar">
             <span>Abrir / Fechar</span>
+            <div class="badge-dev">Em desenvolvimento</div>
         </div>
 
         <div class="icon-item">
@@ -44,29 +43,34 @@
             <span>Mesas</span>
         </div>
 
-        <div class="icon-item">
+        <div class="icon-item em-desenvolvimento">
             <img :src="imgDelivery" alt="Delivery">
             <span>Delivery</span>
+            <div class="badge-dev">Em desenvolvimento</div>
         </div>
 
-        <div class="icon-item">
+        <div class="icon-item em-desenvolvimento">
             <img :src="imgCaixa" alt="Caixa/PDV">
             <span>Caixa / PDV</span>
+            <div class="badge-dev">Em desenvolvimento</div>
         </div>
 
-        <div class="icon-item">
+        <div class="icon-item em-desenvolvimento">
             <img :src="imgFila" alt="Fila">
             <span>Fila</span>
+            <div class="badge-dev">Em desenvolvimento</div>
         </div>
 
-        <div class="icon-item">
+        <div class="icon-item em-desenvolvimento">
             <img :src="imgAgendamento" alt="Agendados">
             <span>Agendados</span>
+            <div class="badge-dev">Em desenvolvimento</div>
         </div>
 
-        <div class="icon-item">
+        <div class="icon-item em-desenvolvimento">
             <img :src="imgNfc" alt="NF-e">
             <span>NF-e</span>
+            <div class="badge-dev">Em desenvolvimento</div>
         </div>
       </div>
 
@@ -83,10 +87,19 @@
           v-model="searchQuery"
         >
       </div>
-      <div class="button">Juntar pedidos</div>
+      <div class="button em-desenvolvimento">
+        Juntar pedidos
+        <span class="badge-dev-btn">Em desenvolvimento</span>
+      </div>
       <div style="flex:1;"></div>
-      <div class="button">Atualizar</div>
-      <div class="button">Iniciar pedido de Balcão</div>
+      <div class="button em-desenvolvimento">
+        Atualizar
+        <span class="badge-dev-btn">Em desenvolvimento</span>
+      </div>
+      <div class="button em-desenvolvimento">
+        Iniciar pedido de Balcão
+        <span class="badge-dev-btn">Em desenvolvimento</span>
+      </div>
     </div>
 
     <div v-if="carregando" style="padding:20px; font-size:18px;">
@@ -97,6 +110,63 @@
       {{ erro }}
     </div>
 
+    <div class="mesas-ocupadas-box">
+      <strong>Mesas ocupadas:</strong>
+
+      <div class="mesas-ocupadas-lista">
+        <div
+          v-for="table in filteredTables"
+          :key="table.id"
+          :class="getMesaClasse(table.status)"
+          class="mesa-item"
+          @click="abrirMesa(table)"
+          @mouseenter="mostrarPreview(table)"
+          style="cursor:pointer; position: relative;"
+        >
+          <div class="mesa-item-numero">{{ table.number }}</div>
+          <div class="mesa-item-status">{{ table.status }}</div>
+          <div v-if="table.cliente" class="mesa-item-cliente">{{ table.cliente }}</div>
+          <div v-if="table.valorTotalMesa != null && table.valorTotalMesa > 0" class="mesa-item-valor">
+            R$ {{ Number(table.valorTotalMesa).toFixed(2) }}
+          </div>
+
+          <!-- Preview da TelaComanda ao passar o mouse -->
+          <div v-if="previewMesa && previewMesa.id === table.id" class="mesa-preview" @click.stop>
+            <div class="preview-header">
+              <span class="preview-titulo">Mesa {{ table.number }}</span>
+              <button class="btn-fechar-preview" @click="ocultarPreview">✕</button>
+            </div>
+            <div class="preview-content">
+              <div v-if="table.pedidos && table.pedidos.length > 0" class="preview-pedidos">
+                <strong>Pedidos:</strong>
+                <div v-for="(pedido, idx) in table.pedidos.slice(0, 3)" :key="idx" class="preview-item">
+                  {{ pedido.nomeProduto }} ({{ pedido.quantidade }}x)
+                </div>
+                <div v-if="table.pedidos.length > 3" class="preview-mais">+{{ table.pedidos.length - 3 }} mais</div>
+              </div>
+              <div v-if="table.pagamentos && table.pagamentos.length > 0" class="preview-pagamentos">
+                <strong>Pagamentos:</strong>
+                <div v-for="(pagamento, idx) in table.pagamentos.slice(0, 2)" :key="idx" class="preview-item">
+                  R$ {{ Number(pagamento.valorPagamento).toFixed(2) }}
+                </div>
+              </div>
+              <div v-if="table.valorTotalMesa" class="preview-total">
+                Total: R$ {{ Number(table.valorTotalMesa).toFixed(2) }}
+              </div>
+              <div class="preview-actions">
+                <button
+                  @click="alternarStatusMesa(table)"
+                  :class="['btn-bloquear', { 'bloqueado': table.status === 'FECHAMENTO' }]"
+                >
+                  {{ table.status === 'FECHAMENTO' ? '🔓 Cancelar Fechamento' : '💳 Solicitar Fechamento' }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="mesas-livres-box">
       <strong>Mesas disponíveis:</strong>
 
@@ -105,31 +175,10 @@
           v-for="n in mesasLivres"
           :key="n"
           class="mesa-livre-item"
+          @click="criarSessaoMesa(n)"
+          style="cursor:pointer;"
         >
           {{ String(n).padStart(2, '0') }}
-        </div>
-      </div>
-    </div>
-
-    <div class="grade-mesas">
-      <div
-        v-for="table in filteredTables"
-        :key="table.id"
-        :class="getMesaClasse(table.status)"
-        class="mesa"
-        @click="abrirMesa(table)"
-        style="position: relative;"
-      >
-        <div>{{ table.status }}</div>
-
-        <div v-if="table.pessoas > 0" class="badge">
-          {{ table.pessoas }}
-        </div>
-
-        <div class="mesa-num">{{ table.number }}</div>
-
-        <div v-if="table.cliente" class="mesa-cliente">
-          {{ table.cliente }}
         </div>
       </div>
     </div>
@@ -142,7 +191,7 @@
 
     <TelaComanda
       v-if="showComandaModal"
-      :mesaId="selectedMesaId"
+      :mesaId="selectedNumeroMesa"
       @close="showComandaModal = false"
     />
 
@@ -152,8 +201,9 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from "vue";
 import api from "@/services/api";
+import mesaSessaoService from '@/services/mesaSessaoService';
 import TelaComanda from './TelaComanda.vue';
-import imgBuscar from '@/assets//imgbuscar.png';
+import imgBuscar from '@/assets/imgbuscar.png';
 import imgAbrirFechar from '@/assets/imgabrir-fechar.png';
 import imgMesa from '@/assets/imgmesa.png';
 import imgDelivery from '@/assets/imgdelivery.png';
@@ -168,7 +218,8 @@ const mesas = ref([]);
 const carregando = ref(false);
 const erro = ref(null);
 const showComandaModal = ref(false);
-const selectedMesaId = ref(null);
+const selectedNumeroMesa = ref(null); // Renomeado
+const previewMesa = ref(null); // Estado para o preview
 
 let intervalo = null;
 
@@ -178,13 +229,59 @@ async function buscarMesas() {
   erro.value = null;
 
   try {
+    // Primeiro, busca a lista básica de mesas abertas
     const response = await api.get("/principal/mesas/abertas");
 
-    mesas.value = response.data.map(m => ({
-      number: String(m.numeroMesa).padStart(2, "0"),
-      cliente: m.nomeCliente ?? null,
-      status: m.status ?? "ABERTA"
-    }));
+    // Para cada mesa, busca os detalhes completos
+    const mesasDetalhadas = await Promise.all(
+      response.data.map(async (m) => {
+        try {
+          // Busca os detalhes completos da mesa pelo número
+          const detalhes = await api.get(`/principal/mesas/por-numero/${m.numeroMesa}`);
+
+          return {
+            id: detalhes.data.id,
+            number: String(detalhes.data.numeroMesa).padStart(2, "0"),
+            numeroMesa: detalhes.data.numeroMesa,
+            cliente: detalhes.data.nomeCliente ?? null,
+            status: detalhes.data.status ?? "ABERTA",
+            quantidadePessoas: detalhes.data.quantidadePessoas,
+            nomeAtendenteResponsavel: detalhes.data.nomeAtendenteResponsavel,
+            atendenteAbertura: detalhes.data.atendenteAbertura,
+            horarioAbertura: detalhes.data.horarioAbertura,
+            horarioFechamento: detalhes.data.horarioFechamento,
+            pedidos: detalhes.data.pedidos || [],
+            pagamentos: detalhes.data.pagamentos || [],
+            valorTotalMesa: detalhes.data.valorTotalMesa,
+            taxaServico: detalhes.data.taxaServico,
+            valorTotalMesaServico: detalhes.data.valorTotalMesaServico
+          };
+        } catch (e) {
+          // Se falhar ao buscar detalhes, retorna dados básicos
+          console.warn(`Erro ao buscar detalhes da mesa ${m.numeroMesa}:`, e);
+          return {
+            id: null,
+            number: String(m.numeroMesa).padStart(2, "0"),
+            numeroMesa: m.numeroMesa,
+            cliente: m.nomeCliente ?? null,
+            status: m.status ?? "ABERTA",
+            quantidadePessoas: 0,
+            nomeAtendenteResponsavel: null,
+            atendenteAbertura: null,
+            horarioAbertura: null,
+            horarioFechamento: null,
+            pedidos: [],
+            pagamentos: [],
+            valorTotalMesa: 0,
+            taxaServico: 0,
+            valorTotalMesaServico: 0
+          };
+        }
+      })
+    );
+
+    mesas.value = mesasDetalhadas;
+    console.log("Mesas carregadas com detalhes:", mesas.value);
 
   } catch (e) {
     erro.value = "Erro ao carregar mesas.";
@@ -207,9 +304,68 @@ onUnmounted(() => {
 // Clique da mesa
 function abrirMesa(table) {
   console.log("Mesa clicada:", table);
-const mesaId = String(table.number).replace(/^0+/, '');
-  selectedMesaId.value = mesaId;
+  selectedNumeroMesa.value = table.numeroMesa || Number(table.number); // passa como número
   showComandaModal.value = true;
+}
+
+// Mostrar preview ao passar o mouse
+function mostrarPreview(table) {
+  previewMesa.value = table;
+}
+
+// Ocultar preview ao sair do mouse
+function ocultarPreview() {
+  previewMesa.value = null;
+}
+
+// Função para criar sessão ao clicar em mesa livre
+async function criarSessaoMesa(numeroMesa) {
+  try {
+    carregando.value = true;
+    erro.value = null;
+    const mesaData = {
+      numeroMesa: numeroMesa,
+      quantidadePessoas: 1, // ou pedir ao usuário
+      status: 'OCUPADA'
+    };
+    const resposta = await mesaSessaoService.criarMesa(mesaData);
+    await buscarMesas();
+
+    // Abrir a mesa criada automaticamente
+    selectedNumeroMesa.value = numeroMesa;
+    showComandaModal.value = true;
+  } catch (e) {
+    erro.value = e?.response?.data?.message || 'Erro ao criar sessão.';
+  } finally {
+    carregando.value = false;
+  }
+}
+
+// Função para alternar status entre OCUPADA e FECHAMENTO
+async function alternarStatusMesa(table) {
+  try {
+    carregando.value = true;
+    const novoStatus = table.status === 'OCUPADA' ? 'FECHAMENTO' : 'OCUPADA';
+
+    const mesaData = {
+      numeroMesa: table.numeroMesa,
+      quantidadePessoas: table.quantidadePessoas || 1,
+      status: novoStatus,
+      idAtendenteResponsavel: table.idAtendenteResponsavel || null,
+      idCliente: table.idCliente || null,
+      taxaServico: null
+    };
+
+    await mesaSessaoService.atualizarMesa(table.id, mesaData);
+    await buscarMesas();
+
+    // Oculta o preview após alternar
+    previewMesa.value = null;
+  } catch (e) {
+    erro.value = e?.response?.data?.message || e?.response?.data || 'Erro ao alterar status da mesa.';
+  } finally {
+    carregando.value = false;
+  }
 }
 
 // Filtragem
@@ -245,15 +401,15 @@ const todasMesas = Array.from({ length: 100 }, (_, i) => i + 1);
 const mesasOcupadasOuFechamento = computed(() =>
   mesas.value
     .filter(m => m.status === 'OCUPADA' || m.status === 'FECHAMENTO')
-    .map(m => Number(m.number))
+    .map(m => m.numeroMesa || Number(m.number))
 );
 
 // Mesas livres = todas que não estão ocupadas ou em fechamento
 const mesasLivres = computed(() =>
   todasMesas.filter(n => !mesasOcupadasOuFechamento.value.includes(n))
 );
-
 </script>
+
 <style scoped>
 .main-container {
   margin: 0;
@@ -307,6 +463,31 @@ const mesasLivres = computed(() =>
   color: white;
 }
 
+.menu-item.em-desenvolvimento {
+  opacity: 0.6;
+  cursor: not-allowed;
+  position: relative;
+}
+
+.menu-item.em-desenvolvimento:hover {
+  background: #F5F5F5;
+  color: #8f8e8e;
+}
+
+.badge-dev-menu {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff3d3d;
+  color: white;
+  font-size: 7px;
+  padding: 2px 4px;
+  border-radius: 8px;
+  font-weight: bold;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
 
 .main-content {
     display: flex;
@@ -339,11 +520,36 @@ const mesasLivres = computed(() =>
     text-align: center;
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
 }
 
 .icon-item:hover {
     transform: translateY(-5px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.icon-item.em-desenvolvimento {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.icon-item.em-desenvolvimento:hover {
+    transform: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.badge-dev {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ff3d3d;
+    color: white;
+    font-size: 9px;
+    padding: 3px 6px;
+    border-radius: 10px;
+    font-weight: bold;
+    white-space: nowrap;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 
@@ -439,10 +645,237 @@ const mesasLivres = computed(() =>
   border: 1px solid #cfcfcf;
   font-size: 13px;
   transition: 0.2s;
+  position: relative;
 }
 
 .button:hover {
   background: #eeeeee;
+}
+
+.button.em-desenvolvimento {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.button.em-desenvolvimento:hover {
+  background: #ffffff;
+}
+
+.badge-dev-btn {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff3d3d;
+  color: white;
+  font-size: 8px;
+  padding: 2px 5px;
+  border-radius: 8px;
+  font-weight: bold;
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.mesas-ocupadas-box {
+  margin: 20px 40px;
+  font-size: 18px;
+}
+
+.mesas-ocupadas-lista {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mesa-item {
+  background: #e6e6e6;
+  padding: 15px;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  min-width: 100px;
+  text-align: center;
+  transition: 0.2s;
+}
+
+.mesa-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.mesa-preview {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  min-width: 200px;
+  max-width: 300px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  font-size: 12px;
+  animation: slideUp 0.2s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.preview-header {
+  border-bottom: 2px solid #ff7b00;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-fechar-preview {
+  background: transparent;
+  border: none;
+  color: #666;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: 0.2s;
+}
+
+.btn-fechar-preview:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.preview-titulo {
+  font-weight: bold;
+  color: #333;
+}
+
+.preview-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.preview-pedidos,
+.preview-pagamentos {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.preview-pedidos strong,
+.preview-pagamentos strong {
+  color: #ff7b00;
+  font-size: 11px;
+}
+
+.preview-item {
+  color: #333;
+  font-size: 11px;
+  padding-left: 8px;
+  border-left: 2px solid #ffd08a;
+}
+
+.preview-mais {
+  color: #888;
+  font-size: 10px;
+  font-style: italic;
+  padding-left: 8px;
+}
+
+.preview-total {
+  background: #ffd08a;
+  padding: 6px;
+  border-radius: 4px;
+  font-weight: bold;
+  color: #333;
+  text-align: center;
+}
+
+.preview-actions {
+  margin-top: 8px;
+  display: flex;
+  justify-content: center;
+}
+
+.btn-bloquear {
+  background: #ff7b00;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-bloquear:hover {
+  background: #ff6600;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.btn-bloquear.bloqueado {
+  background: #4CAF50;
+}
+
+.btn-bloquear.bloqueado:hover {
+  background: #45a049;
+}
+
+.mesa-item.mesa-ocupada {
+  background: #ffd08a;
+}
+
+.mesa-item.mesa-fechamento {
+  background: #ff9a9a;
+}
+
+.mesa-item.mesa-aberta {
+  background: #b8ffb8;
+}
+
+.mesa-item-numero {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.mesa-item-status {
+  font-size: 11px;
+  color: #333;
+  margin-bottom: 3px;
+}
+
+.mesa-item-cliente {
+  font-size: 11px;
+  color: #333;
+  margin-bottom: 3px;
+}
+
+.mesa-item-valor {
+  font-size: 12px;
+  color: #006600;
+  font-weight: bold;
 }
 
 .grade-mesas {
@@ -477,7 +910,7 @@ const mesasLivres = computed(() =>
 }
 
 .mesas-livres-box {
-  margin: 20px 0;
+  margin: 20px 40px;
   font-size: 18px;
 }
 
@@ -493,6 +926,14 @@ const mesasLivres = computed(() =>
   padding: 30px 30px;
   border-radius: 5px;
   font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.mesa-livre-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  background: #d0d0d0;
 }
 
 /* Bolinha de quantidade de pessoas */
@@ -512,6 +953,14 @@ const mesasLivres = computed(() =>
   font-size: 11px;
   margin-top: 5px;
   color: #333;
+}
+
+/* Valor da mesa */
+.mesa-valor {
+  font-size: 12px;
+  margin-top: 3px;
+  color: #006600;
+  font-weight: bold;
 }
 
 .mesa:hover {
